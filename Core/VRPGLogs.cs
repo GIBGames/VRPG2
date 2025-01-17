@@ -26,15 +26,18 @@ namespace GIB.VRPG2
         [Header("Logs")]
         [SerializeField] private CanvasGroup ICLogGroup;
         [SerializeField] private TextMeshProUGUI ICOutputBox;
-        [SerializeField] private InputField ICInputBox;
+        [SerializeField] private TMP_InputField ICInputBox;
         [Space]
         [SerializeField] private CanvasGroup OOCLogGroup;
         [SerializeField] private TextMeshProUGUI OOCOutputBox;
-        [SerializeField] private InputField OOCInputBox;
+        [SerializeField] private TMP_InputField OOCInputBox;
         [Space]
         [SerializeField] private CanvasGroup GMLogGroup;
         [SerializeField] private TextMeshProUGUI GMOutputBox;
-        [SerializeField] private InputField GMInputBox;
+        [SerializeField] private TMP_InputField GMInputBox;
+
+        [Header("Alert")]
+        [SerializeField] private AudioSource ImSound;
 
         [Header("Synced Variables")]
         [UdonSynced] public string NewDebugText;
@@ -69,9 +72,27 @@ namespace GIB.VRPG2
             SendLog(message, VRPGLogType.OOC);
         }
 
-        public void SendLog(string message, VRPGLogType logType)
+        public void LogRaw(string message)
         {
-            if(logType == VRPGLogType.Debug)
+            SendLog(message, VRPGLogType.OOC, true);
+        }
+
+        public void LogGM(string message)
+        {
+            SendLog(message, VRPGLogType.GM);
+        }
+
+        public void LogGMRaw(string message)
+        {
+            SendLog(message, VRPGLogType.GM, true);
+        }
+
+        public void SendLog(string message, VRPGLogType logType, bool isRaw = false)
+        {
+            if (message == "") return;
+
+            Networking.SetOwner(Networking.LocalPlayer, gameObject);
+            if (logType == VRPGLogType.Debug)
             {
                 NetworkDebugLog(message);
             }
@@ -79,13 +100,21 @@ namespace GIB.VRPG2
             string newLogText = message;
             SyncedLogType = (int)logType;
 
-            if (SyncedLogType == (int)VRPGLogType.IC)
+            if (isRaw)
             {
-                NewLogText = $"\n{VRPG.Character.CharacterName}: {newLogText}";
+                NewLogText = "\n" + newLogText;
             }
             else
             {
-                NewLogText = $"\n{Networking.LocalPlayer.displayName}: {newLogText}";
+                if (SyncedLogType == (int)VRPGLogType.IC)
+                {
+                    string logCharName = VRPG.LocalPlayerObject.GetCharacterName() + "";
+                    NewLogText = $"\n{logCharName}: {newLogText}";
+                }
+                else
+                {
+                    NewLogText = $"\n{Networking.LocalPlayer.displayName}: {newLogText}";
+                }
             }
 
             RequestSerialization();
@@ -113,6 +142,7 @@ namespace GIB.VRPG2
 
         public void SendLogRaw(string message, VRPGLogType logType)
         {
+            Networking.SetOwner(Networking.LocalPlayer, gameObject);
             SyncedLogType = (int)logType;
             NewLogText = $"\n{message}";
 
@@ -143,53 +173,57 @@ namespace GIB.VRPG2
         {
             Networking.SetOwner(Networking.LocalPlayer, gameObject);
             SendLog(ICInputBox.text, VRPGLogType.IC);
+
+            if (ImSound) ImSound.Play();
+
+            ICInputBox.text = "";
         }
         public void SendLogOOC()
         {
             Networking.SetOwner(Networking.LocalPlayer, gameObject);
             SendLog(OOCInputBox.text, VRPGLogType.OOC);
+            OOCInputBox.text = "";
         }
         public void SendLogGM()
         {
             Networking.SetOwner(Networking.LocalPlayer, gameObject);
             SendLog(GMInputBox.text, VRPGLogType.GM);
+            GMInputBox.text = "";
         }
 
         public void ShowICLog()
         {
-            ICLogGroup.alpha = 1;
-            ICLogGroup.blocksRaycasts = true;
-            OOCLogGroup.alpha = 0;
-            OOCLogGroup.blocksRaycasts = false;
-            GMLogGroup.alpha = 0;
-            GMLogGroup.blocksRaycasts = false;
+            ShowLogType(VRPGLogType.IC);
         }
 
         public void ShowOOCLog()
         {
-            ICLogGroup.alpha = 0;
-            ICLogGroup.blocksRaycasts = false;
-            OOCLogGroup.alpha = 1;
-            OOCLogGroup.blocksRaycasts = true;
-            GMLogGroup.alpha = 0;
-            GMLogGroup.blocksRaycasts = false;
+            ShowLogType(VRPGLogType.OOC);
         }
 
         public void ShowGMLog()
         {
-            ICLogGroup.alpha = 0;
-            ICLogGroup.blocksRaycasts = false;
-            OOCLogGroup.alpha = 0;
-            OOCLogGroup.blocksRaycasts = false;
-            GMLogGroup.alpha = 1;
-            GMLogGroup.blocksRaycasts = true;
+            ShowLogType(VRPGLogType.GM);
+        }
+
+        private void ShowLogType(VRPGLogType thisLogType)
+        {
+            ICLogGroup.alpha = thisLogType == VRPGLogType.IC ? 1 : 0;
+            ICLogGroup.blocksRaycasts = thisLogType == VRPGLogType.IC ? true : false;
+            ICLogGroup.interactable = thisLogType == VRPGLogType.IC ? true : false;
+            OOCLogGroup.alpha = thisLogType == VRPGLogType.OOC ? 1 : 0;
+            OOCLogGroup.blocksRaycasts = thisLogType == VRPGLogType.OOC ? true : false;
+            OOCLogGroup.interactable = thisLogType == VRPGLogType.OOC ? true : false;
+            GMLogGroup.alpha = thisLogType == VRPGLogType.GM ? 1 : 0;
+            GMLogGroup.blocksRaycasts = thisLogType == VRPGLogType.GM ? true : false;
+            GMLogGroup.interactable = thisLogType == VRPGLogType.GM ? true : false;
         }
 
 
         public void Sync_SendLogIC()
         {
             ICOutputBox.text += NewLogText;
-
+            if (ImSound) ImSound.Play();
         }
 
         public void Sync_SendLogOOC()

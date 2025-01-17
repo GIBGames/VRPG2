@@ -11,6 +11,7 @@ using UdonToolkit;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using VRC.SDK3.Persistence;
 
 namespace GIB.VRPG2
 {
@@ -28,11 +29,55 @@ namespace GIB.VRPG2
 		public Color OocColor;
 		public Color IcColor;
 		public Color GmColor;
-		public Sprite GameImage;
+        public Color StaffColor;
+        public Sprite GameImage;
 
 		[Header("Voice")]
 		public float InVoiceZone = 25f;
 		public float OutVoiceZone = 0f;
+
+		[Header("Persistent Options")]
+
+		public Toggle[] optionToggles;
+		public Slider[] optionSliders;
+
+
+        public override void OnPlayerRestored(VRCPlayerApi player)
+        {
+			if (player.isLocal)
+				RestoreOptions(player);
+        }
+
+		private void RestoreOptions(VRCPlayerApi player)
+		{
+			foreach (var toggle in optionToggles)
+			{
+				string keyVal = "vrpg-options-" + toggle.name;
+				bool optionValue = !PlayerData.HasKey(player, keyVal) || PlayerData.GetBool(player, keyVal);
+				toggle.isOn = optionValue;
+			}
+
+            foreach (var slider in optionSliders)
+            {
+                string keyValS = "vrpg-options-" + slider.name;
+				if (PlayerData.HasKey(player, keyValS))
+					slider.value = PlayerData.GetFloat(player, keyValS);
+            }
+        }
+
+		public void SaveOptions()
+		{
+            foreach (var toggle in optionToggles)
+            {
+                PlayerData.SetBool("vrpg-options-" + toggle.name,toggle.isOn);
+            }
+
+            foreach (var slider in optionSliders)
+            {
+                PlayerData.SetFloat("vrpg-options-" + slider.name, slider.value);
+            }
+        }
+
 
         [Button("Set Up")]
 		public void SetUp()

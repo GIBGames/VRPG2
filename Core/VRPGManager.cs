@@ -42,7 +42,9 @@ namespace GIB.VRPG2
 		public VRPGSocial Social;
 		[Tooltip("Whitelist component")]
 		public VRPGWhitelists Whitelists;
-		[Tooltip("Region component")]
+        [Tooltip("Teleporter component")]
+        public VRPGPlayerTeleport Teleporter;
+        [Tooltip("Region component")]
 		public VRPGRegions Regions;
 		[Tooltip("World Options")]
 		public VRPGOptions Options;
@@ -53,10 +55,6 @@ namespace GIB.VRPG2
         [Header("Options")]
 		public Color LabelColor = Color.yellow;
 		public Color OocLabelColor = Color.cyan;
-
-		#region Constants
-
-		#endregion
 
 		#region Static Methods
 		public static DataDictionary JsonToDictionary(string input)
@@ -87,10 +85,6 @@ namespace GIB.VRPG2
 				return string.Empty;
 			}
 		}
-		#endregion
-
-		#region Unity Methods
-		
 		#endregion
 		
 		#region Public Methods
@@ -141,9 +135,13 @@ namespace GIB.VRPG2
 			}
 		}
 
-        #endregion
-
-        #region Private Methods
+        public void SetDescription(string nDesc)
+        {
+            if (Utilities.IsValid(LocalPlayerObject))
+            {
+                LocalPlayerObject.SetDescription(nDesc);
+            }
+        }
 
         #endregion
 

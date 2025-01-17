@@ -74,7 +74,7 @@ namespace GIB.VRPG2
             PatronArray = patronClean.Split(separatorChar);
 
             //Create UI lists
-            string tempCreditTiers = PatronHash.Replace("\n", " • ");
+            string tempCreditTiers = PatronHash.Replace("\n", " ~ ");
             CreditTiers = tempCreditTiers.Split('@');
             GenerateCredits();
         }

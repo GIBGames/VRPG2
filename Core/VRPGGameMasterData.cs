@@ -10,56 +10,100 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 using UnityEngine.UI;
+using TMPro;
 
 namespace GIB.VRPG2
 {
+    public class VRPGGameMasterData : VRPGComponent
+    {
+        [SerializeField] private GameObject[] GMObjects;
+        [SerializeField] private VRC_Pickup[] GMPickups;
 
-	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class VRPGGameMasterData : VRPGComponent
-	{
-		[SerializeField] private GameObject[] GMObjects;
-		[SerializeField] private VRC_Pickup[] GMPickups;
+        [Header("Titles")]
+        public string GameMasterName;
+        public string GameMasterTitle;
+        public string GameMasterAbv;
+        public string GameStaffTitle;
+        public string GameStaffAbv;
 
-		[Header("Titles")]
-		public string GameMasterName;
-		public string GameMasterTitle;
-		public string GameMasterAbv;
-		public string GameStaffTitle;
-		public string GameStaffAbv;
+        [Header("GM Data")]
+        private VRCPlayerApi currentGMTemp;
+        [SerializeField] private bool useWhitelist = true;
+        [SerializeField] private string[] gmNames;
 
-		[Header("GM Data")]
-		public VRCUrl targetUrl;
-		private VRCPlayerApi currentGMTemp;
+        [Header("GUI")]
+        [SerializeField] private VRPGTextElement gmVoiceStatus;
+        [SerializeField] private VRPGTextElement gmSpeedStatus;
+        [SerializeField] private TMP_Dropdown teleTarget;
+        [SerializeField] private AudioSource GMSound;
 
-		[Header("GUI")]
-		[SerializeField] private VRPGTextElement gmVoiceStatus;
-		[SerializeField] private VRPGTextElement gmSpeedStatus;
-		[SerializeField] private Dropdown teleTarget;
-
-		[Header("References")]
-		public Transform[] TeleportPoints;
-		public Transform PlayerTeleTarget;
+        [Header("References")]
+        public Transform[] TeleportPoints;
+        public Transform PlayerTeleTarget;
 
         [Header("Mod Tools")]
         [SerializeField] private Transform noBox;
 
-		public void OnWhitelistDownloaded()
+        public void OnWhitelistDownloaded()
         {
-			if(VRPG.Whitelists.IsOnWhitelist("StaffList",Networking.LocalPlayer.displayName))
-            {
-				ActivateStaff();
-            }
-
+            ActivateStaff(IsOnStaffList(Networking.LocalPlayer.displayName));
         }
 
-		public bool IsOnStaffList(string userName)
+        public bool IsOnStaffList(string userName)
         {
-			return VRPG.Whitelists.IsOnWhitelist("staff", userName);
+            bool tryStaff = false;
+            if (useWhitelist)
+                tryStaff = VRPG.Whitelists.IsOnWhitelist("StaffList", userName);
 
-		}
-		private void ActivateStaff()
+            foreach (string name in gmNames)
+            {
+                if (userName.ToLower() == name.ToLower())
+                {
+                    tryStaff = true;
+                }
+            }
+
+            if (userName.ToLower() == GameMasterName.ToLower()) tryStaff = true;
+
+            return tryStaff;
+        }
+
+        public string GetGMIcon(string userName)
         {
+            string iconString = "";
+            if (userName.ToLower() == GameMasterName.ToLower())
+            {
+                iconString = $"[{Utils.MakeColor(GameMasterAbv, VRPG.Options.GmColor)}] ";
+            }
+            else if (IsOnStaffList(userName))
+            {
+                iconString = $"[{Utils.MakeColor(GameStaffAbv, VRPG.Options.StaffColor)}] ";
+            }
 
+            return iconString;
+        }
+
+        public string GetGMTitle(string userName)
+        {
+            string titleString = "";
+            if (userName.ToLower() == GameMasterName.ToLower())
+            {
+                titleString = $"{Utils.MakeColor(GameMasterTitle, VRPG.Options.GmColor)}";
+            }
+            else if (IsOnStaffList(userName))
+            {
+                titleString = $"{Utils.MakeColor(GameStaffTitle, VRPG.Options.StaffColor)}";
+            }
+
+            return titleString;
+        }
+
+        private void ActivateStaff(bool isStaff)
+        {
+            foreach (GameObject gmObject in GMObjects)
+            {
+                gmObject.SetActive(isStaff);
+            }
         }
 
         #region Mod tools
@@ -97,24 +141,36 @@ namespace GIB.VRPG2
                 CheckForExile();
         }
 
+        public void CallST()
+        {
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "SyncCallST");
+            VRPG.Logger.LogGMRaw($"{Networking.LocalPlayer.displayName} called for an ST!");
+        }
+
+        public void SyncCallST()
+        {
+            if(IsOnStaffList(Networking.LocalPlayer.displayName))
+            {
+                GMSound.Play();
+            }
+        }
+
         #endregion
 
         #region ST Teleport
 
         public void TeleToSelected()
         {
+            Debug.Log("Executing TeleToSelected");
             if (PlayerTeleTarget == null)
             {
-                VRPG.Logger.DebugLog("PlayerTeleTarget is not assigned, cannot teleport to players.",gameObject);
+                VRPG.Logger.DebugLog("PlayerTeleTarget is not assigned, cannot teleport to players.", gameObject);
                 return;
             }
 
             if (VRPG.Social.SelectedPlayer != null)
             {
                 VRCPlayerApi targetPlayer = VRPG.Social.SelectedPlayer.Owner;
-                if (!targetPlayer.IsValid()) return;
-
-                VRPG.Regions.LoadAllRegions();
 
                 PlayerTeleTarget.SetPositionAndRotation(targetPlayer.GetPosition(), targetPlayer.GetRotation());
 
@@ -129,84 +185,118 @@ namespace GIB.VRPG2
 
                 Networking.LocalPlayer.TeleportTo(PlayerTeleTarget.position, PlayerTeleTarget.rotation);
             }
+            else
+            {
+                Debug.Log("Selected Player was null!");
+            }
         }
 
         public void TrySpawn0()
         {
             if (teleTarget.value == 0)
+            {
                 GoSpawn0();
+            }
             else
+            {
                 SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GoSpawn0");
+                GoSpawn0();
+            }
         }
 
         public void TrySpawn1()
         {
             if (teleTarget.value == 0)
+            {
                 GoSpawn1();
+            }
             else
+            {
                 SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GoSpawn1");
+                GoSpawn1();
+            }
         }
 
         public void TrySpawn2()
         {
             if (teleTarget.value == 0)
+            {
                 GoSpawn2();
+            }
             else
+            {
                 SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GoSpawn2");
+                GoSpawn2();
+            }
         }
 
         public void TrySpawn3()
         {
             if (teleTarget.value == 0)
+            {
                 GoSpawn3();
+            }
             else
+            {
                 SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GoSpawn3");
+                GoSpawn3();
+            }
         }
 
         public void TrySpawn4()
         {
             if (teleTarget.value == 0)
+            {
                 GoSpawn4();
+            }
             else
+            {
                 SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GoSpawn4");
+                GoSpawn4();
+            }
         }
 
         public void TrySpawn5()
         {
             if (teleTarget.value == 0)
+            {
                 GoSpawn5();
+            }
             else
+            {
                 SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GoSpawn5");
+                GoSpawn5();
+            }
         }
 
         public void GoSpawn0()
         {
-            Networking.LocalPlayer.TeleportTo(TeleportPoints[0].position, TeleportPoints[0].rotation);
+            VRPG.Teleporter.TeleportPlayer(TeleportPoints[0].position, TeleportPoints[0].rotation);
         }
 
         public void GoSpawn1()
         {
-            Networking.LocalPlayer.TeleportTo(TeleportPoints[1].position, TeleportPoints[1].rotation);
+            VRPG.Teleporter.TeleportPlayer(TeleportPoints[1].position, TeleportPoints[1].rotation);
         }
 
         public void GoSpawn2()
         {
-            Networking.LocalPlayer.TeleportTo(TeleportPoints[2].position, TeleportPoints[2].rotation);
+            VRPG.Teleporter.TeleportPlayer(TeleportPoints[2].position, TeleportPoints[2].rotation);
         }
 
         public void GoSpawn3()
         {
-            Networking.LocalPlayer.TeleportTo(TeleportPoints[3].position, TeleportPoints[3].rotation);
+            VRPG.Teleporter.TeleportPlayer(TeleportPoints[3].position, TeleportPoints[3].rotation);
         }
 
         public void GoSpawn4()
         {
-            Networking.LocalPlayer.TeleportTo(TeleportPoints[4].position, TeleportPoints[4].rotation);
+            VRPG.Teleporter.TeleportPlayer(TeleportPoints[4].position, TeleportPoints[4].rotation);
         }
 
         public void GoSpawn5()
         {
-            Networking.LocalPlayer.TeleportTo(TeleportPoints[5].position, TeleportPoints[5].rotation);
+            VRPG.Teleporter.TeleportPlayer(TeleportPoints[5].position, TeleportPoints[5].rotation);
         }
 
         #endregion
@@ -228,7 +318,8 @@ namespace GIB.VRPG2
         public void SyncSTVoiceOn()
         {
             UpdateCurrentST();
-            gmVoiceStatus.Text = "GM voice <color=\"red\">ON</color>";
+            if (gmVoiceStatus)
+                gmVoiceStatus.Text = "<color=\"red\">ON</color>";
             currentGMTemp.SetVoiceDistanceNear(9999);
             currentGMTemp.SetVoiceDistanceFar(10000);
         }
@@ -236,9 +327,28 @@ namespace GIB.VRPG2
         public void SyncSTVoiceOff()
         {
             UpdateCurrentST();
-            gmVoiceStatus.Text = "GM voice OFF";
+            if (gmVoiceStatus)
+                gmVoiceStatus.Text = "OFF";
             currentGMTemp.SetVoiceDistanceNear(0);
             currentGMTemp.SetVoiceDistanceFar(25);
+        }
+
+        #endregion
+
+        #region ST Speed
+
+        public void STSpeedOn()
+        {
+            if (gmSpeedStatus)
+                gmSpeedStatus.Text = "<color=\"red\">ON</color>";
+            Networking.LocalPlayer.SetRunSpeed(10f);
+        }
+
+        public void STSpeedOff()
+        {
+            if (gmSpeedStatus)
+                gmSpeedStatus.Text = "OFF";
+            Networking.LocalPlayer.SetRunSpeed(4f);
         }
 
         #endregion

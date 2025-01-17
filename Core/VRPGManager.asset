@@ -44,7 +44,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 14
+      Data: 15
     - Name: 
       Entry: 7
       Data: 
@@ -125,7 +125,7 @@ MonoBehaviour:
       Data: 7|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGGameMasterData, VRpg
+      Data: GIB.VRPG2.VRPGGameMasterData, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -203,7 +203,7 @@ MonoBehaviour:
       Data: 13|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGMenu, VRpg
+      Data: GIB.VRPG2.VRPGMenu, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -266,7 +266,7 @@ MonoBehaviour:
       Data: 17|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGLogs, VRpg
+      Data: GIB.VRPG2.VRPGLogs, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -329,7 +329,7 @@ MonoBehaviour:
       Data: 21|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGVoiceController, VRpg
+      Data: GIB.VRPG2.VRPGVoiceController, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -392,7 +392,7 @@ MonoBehaviour:
       Data: 25|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGPatronData, VRpg
+      Data: GIB.VRPG2.VRPGPatronData, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -455,7 +455,7 @@ MonoBehaviour:
       Data: 29|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGCharacter, VRpg
+      Data: GIB.VRPG2.VRPGCharacter, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -518,7 +518,7 @@ MonoBehaviour:
       Data: 33|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGSocial, VRpg
+      Data: GIB.VRPG2.VRPGSocial, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -581,7 +581,7 @@ MonoBehaviour:
       Data: 37|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGWhitelists, VRpg
+      Data: GIB.VRPG2.VRPGWhitelists, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -632,19 +632,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Regions
+      Data: Teleporter
     - Name: $v
       Entry: 7
       Data: 40|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: Regions
+      Data: Teleporter
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 41|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGRegions, VRpg
+      Data: GIB.VRPG2.VRPGPlayerTeleport, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -674,7 +674,7 @@ MonoBehaviour:
       Data: 43|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
     - Name: tooltip
       Entry: 1
-      Data: Region component
+      Data: Teleporter component
     - Name: 
       Entry: 8
       Data: 
@@ -695,19 +695,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Options
+      Data: Regions
     - Name: $v
       Entry: 7
       Data: 44|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: Options
+      Data: Regions
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 45|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGOptions, VRpg
+      Data: GIB.VRPG2.VRPGRegions, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -737,7 +737,7 @@ MonoBehaviour:
       Data: 47|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
     - Name: tooltip
       Entry: 1
-      Data: World Options
+      Data: Region component
     - Name: 
       Entry: 8
       Data: 
@@ -758,19 +758,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: LocalPlayerObject
+      Data: Options
     - Name: $v
       Entry: 7
       Data: 48|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: LocalPlayerObject
+      Data: Options
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 49|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGPlayerObject, VRpg
+      Data: GIB.VRPG2.VRPGOptions, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -797,7 +797,70 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 51|UnityEngine.HeaderAttribute, UnityEngine.CoreModule
+      Data: 51|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
+    - Name: tooltip
+      Entry: 1
+      Data: World Options
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: LocalPlayerObject
+    - Name: $v
+      Entry: 7
+      Data: 52|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+    - Name: <Name>k__BackingField
+      Entry: 1
+      Data: LocalPlayerObject
+    - Name: <UserType>k__BackingField
+      Entry: 7
+      Data: 53|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: GIB.VRPG2.VRPGPlayerObject, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: <SystemType>k__BackingField
+      Entry: 9
+      Data: 8
+    - Name: <SyncMode>k__BackingField
+      Entry: 7
+      Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: <IsSerialized>k__BackingField
+      Entry: 5
+      Data: true
+    - Name: _fieldAttributes
+      Entry: 7
+      Data: 54|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 55|UnityEngine.HeaderAttribute, UnityEngine.CoreModule
     - Name: header
       Entry: 1
       Data: ObjectPool
@@ -824,13 +887,13 @@ MonoBehaviour:
       Data: LabelColor
     - Name: $v
       Entry: 7
-      Data: 52|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 56|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
       Data: LabelColor
     - Name: <UserType>k__BackingField
       Entry: 7
-      Data: 53|System.RuntimeType, mscorlib
+      Data: 57|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -839,7 +902,7 @@ MonoBehaviour:
       Data: 
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 53
+      Data: 57
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -854,13 +917,13 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 54|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 58|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 55|UnityEngine.HeaderAttribute, UnityEngine.CoreModule
+      Data: 59|UnityEngine.HeaderAttribute, UnityEngine.CoreModule
     - Name: header
       Entry: 1
       Data: Options
@@ -887,16 +950,16 @@ MonoBehaviour:
       Data: OocLabelColor
     - Name: $v
       Entry: 7
-      Data: 56|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 60|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
       Data: OocLabelColor
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 53
+      Data: 57
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 53
+      Data: 57
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -911,7 +974,7 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 57|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 61|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0

@@ -19,7 +19,7 @@ MonoBehaviour:
   sourceCsScript: {fileID: 11500000, guid: 6da22eef55efed948930601e047337ae, type: 3}
   scriptVersion: 2
   compiledVersion: 2
-  behaviourSyncMode: 1
+  behaviourSyncMode: 2
   hasInteractEvent: 1
   scriptID: -3778846693728082549
   serializationData:
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGManager, VRpg
+      Data: GIB.VRPG2.VRPGManager, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -122,7 +122,7 @@ MonoBehaviour:
       Data: 7|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.CallerPosition, VRpg
+      Data: GIB.VRPG2.CallerPosition, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGManager, VRpg
+      Data: GIB.VRPG2.VRPGManager, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -464,7 +464,7 @@ MonoBehaviour:
       Data: 27|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGTextElement, VRpg
+      Data: GIB.VRPG2.VRPGTextElement, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

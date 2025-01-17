@@ -15,7 +15,7 @@ namespace GIB.VRPG2
 	/// <summary>
 	/// Object that calls the VRPG Menu to the player.
 	/// </summary>
-	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	[UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
 	public class VRPGMenuCaller : VRPGComponent
 	{
 		[SerializeField] private CallerPosition callerPosition;
@@ -39,15 +39,14 @@ namespace GIB.VRPG2
 			if (isVRPlayer) return;
 
 			if (Input.GetKeyDown(KeyCode.Q))
-				Interact();
-		}
+                VRPG.Menu.SwapMenuState();
+        }
 
         private void FixedUpdate()
         {
-			if (!isVRPlayer || Networking.LocalPlayer == null) return;
+			if (Networking.LocalPlayer == null) return;
 
 			VRCPlayerApi.TrackingData callerTrack = new VRCPlayerApi.TrackingData();
-
 			
 			switch (callerPosition)
             {
@@ -70,7 +69,7 @@ namespace GIB.VRPG2
 
         public override void Interact()
         {
-			VRPG.Menu.SwapMenuState();
+            VRPG.Menu.SwapMenuState();
         }
 
         #endregion

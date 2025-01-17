@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGManager, VRpg
+      Data: GIB.VRPG2.VRPGManager, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -524,7 +524,7 @@ MonoBehaviour:
       Data: 30|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGTextElement, VRpg
+      Data: GIB.VRPG2.VRPGTextElement, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -755,7 +755,7 @@ MonoBehaviour:
       Data: 44|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGTextElement[], VRpg
+      Data: GIB.VRPG2.VRPGTextElement[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -821,7 +821,7 @@ MonoBehaviour:
       Data: 49|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGIconElement, VRpg
+      Data: GIB.VRPG2.VRPGIconElement, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -944,7 +944,7 @@ MonoBehaviour:
       Data: 57|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GIB.VRPG2.VRPGIconElement[], VRpg
+      Data: GIB.VRPG2.VRPGIconElement[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

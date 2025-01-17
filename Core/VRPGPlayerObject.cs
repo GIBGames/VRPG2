@@ -148,6 +148,10 @@ namespace GIB.VRPG2
             RequestSerialization();
         }
 
+        public string GetCharacterName()
+        {
+            return PlayerData.GetString(Owner,"vrpg-charName");
+        }
 
 
         public override void OnPlayerRespawn(VRCPlayerApi player)
@@ -264,6 +268,12 @@ namespace GIB.VRPG2
             PlayerData.SetString("vrpg-charTitle", newTitle);
         }
 
+        public void SetDescription(string newDesc)
+        {
+            string finalDesc = newDesc.Replace("$", "\n");
+            PlayerData.SetString("vrpg-charDesc", finalDesc);
+        }
+
         // Non-Persistent Vars
         public void SetStreaming(bool state, bool notify = true)
         {
@@ -291,7 +301,9 @@ namespace GIB.VRPG2
 
         public void SetSelected(VRCPlayerApi target, bool notify = true)
         {
-            VarsDict.SetInt("selectedPlayer", target.playerId);
+            if (!Utilities.IsValid(target)) return;
+
+            PlayerData.SetInt("vrpg-selectedPlayer",target.playerId);
 
             if(notify)
                 NotifyValueChanged();
@@ -307,7 +319,8 @@ namespace GIB.VRPG2
 
         private void InitializePooledObjectGUI()
         {
-            // map icon color, labels, etc.
+            NameLabel.SetText("");
+            TitleLabel.SetText("");
         }
 
         private void _OnValueChanged()
@@ -357,6 +370,13 @@ namespace GIB.VRPG2
                 topImage.ResetColor();
             else
                 topImage.SetTransparent();
+
+            // Set local values for plates and internal character name
+            if (Owner.isLocal)
+            {
+                VRPG.Menu.SetPlates(tempName, tempTitle);
+                VRPG.Character.CharacterName = tempName;
+            }
         }
 
         private void CheckPatronColor()

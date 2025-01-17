@@ -18,18 +18,35 @@ namespace GIB.VRPG2
         [UdonSynced]
         [TextArea]
         [SerializeField] private string whitelistJson;
+        private string prevWhitelistJson;
 
         [SerializeField] private UdonSharpBehaviour[] subscribers;
+
+        [SerializeField,TextArea] private string testDictOutput;
 
         private void Start()
         {
             whitelists = new DataDictionary();
 
-            if(Networking.LocalPlayer.isMaster)
-                GetWhitelists();
+            if (Networking.LocalPlayer.isMaster)
+            {
+            GetWhitelists();
+            }
             else
             {
                 SendCustomNetworkEvent(NetworkEventTarget.Owner, "DoUpdateWhitelists");
+            }
+
+        }
+
+        public override void OnDeserialization()
+        {
+            if(whitelistJson != prevWhitelistJson)
+            {
+                prevWhitelistJson = whitelistJson;
+                VRPG.Logger.DebugLog("Whitelists updated.", gameObject);
+                whitelists = Utils.JsonToDictionary(whitelistJson);
+                InformSubscribers();
             }
         }
 
@@ -55,21 +72,33 @@ namespace GIB.VRPG2
         {
             whitelistJson = result.Result;
             whitelists = Utils.JsonToDictionary(whitelistJson);
+            RequestSerialization();
+
+            prevWhitelistJson = whitelistJson;
+            VRPG.Logger.DebugLog("Whitelists updated.", gameObject);
+            whitelists = Utils.JsonToDictionary(whitelistJson);
+            InformSubscribers();
         }
 
         public override void OnStringLoadError(IVRCStringDownload result)
         {
             VRPG.Logger.DebugLog("[VRPG Whitelists] " + result.Error, gameObject);
+            InformSubscribers();
         }
 
         public bool IsOnWhitelist(string listName,string userName)
         {
             if(whitelists.TryGetValue(listName,TokenType.DataList,out DataToken value))
             {
+                DataToken thisUserName = userName.ToLower();
                 DataList targetList = value.DataList;
-                if (targetList.Contains(userName))
+                if (targetList.Contains(thisUserName))
+                {
+                    Debug.Log($"name {userName} exists on whitelist {listName}.");
                     return true;
+                } 
             }
+            Debug.Log($"name {userName} does not exist on whitelist {listName}.");
             return false;
         }
 

@@ -7,6 +7,7 @@ using VRC.SDK3.Data;
 using UnityEngine.UI;
 using VRC.SDK3.StringLoading;
 using VRC.Udon.Common.Interfaces;
+using TMPro;
 
 namespace GIB.VRPG2
 {
@@ -25,10 +26,10 @@ namespace GIB.VRPG2
         //[SerializeField] private string[] characters;
         private DataDictionary characterDictionary;
 
-        [SerializeField] private InputField idBox;
+        [SerializeField] private TMP_InputField idBox;
         [SerializeField] private Button FetchButton;
         [SerializeField] private GameObject pleaseWaitText;
-        [SerializeField] private Text resultText;
+        [SerializeField] private TextMeshProUGUI resultText;
 
         public DataDictionary PlayerCharOptions;
 
@@ -59,6 +60,11 @@ namespace GIB.VRPG2
         {
             string fullCharString = result.Result;
 
+            GenerateNewCharacterDictionary(fullCharString);
+        }
+
+        public void GenerateNewCharacterDictionary(string fullCharString)
+        {
             if (VRCJson.TryDeserializeFromJson(fullCharString, out DataToken charList))
             {
                 // Sanity Check
@@ -87,19 +93,15 @@ namespace GIB.VRPG2
                     VRPG.HandlerLog($"Successfully read character data for {thisName.String}");
                 }
             }
-
-            // testing
-
-            if (VRCJson.TrySerializeToJson(characterDictionary, JsonExportType.Beautify, out DataToken charJsonToken))
-            {
-                Debug.Log("Debug: serialized back to string.");
-                CharJsonString = charJsonToken.String;
-            }
-
             pleaseWaitText.SetActive(false);
             charSheet.gameObject.SetActive(true);
             VRPG.HandlerLog("Successfully fetched characters!");
             FetchButton.interactable = true;
+        }
+
+        public void GenerateCharacterDictionaryManual()
+        {
+            GenerateNewCharacterDictionary(CharJsonString);
         }
 
         public override void OnStringLoadError(IVRCStringDownload result)
@@ -117,13 +119,14 @@ namespace GIB.VRPG2
 
             if (characterDictionary.TryGetValue(input, out DataToken value))
             {
+                resultText.text = "Loading Character...";
                 DataDictionary thisCharDictionary = value.DataDictionary;
 
                 if (thisCharDictionary.TryGetValue("vrcName", out DataToken thisVrcName))
                 {
                     string thisName = thisVrcName.String.ToLower();
 
-                    if (thisName == localPlayerName || thisName == "any")
+                    if (VRPG.GMData.IsOnStaffList(Networking.LocalPlayer.displayName) || thisName == localPlayerName || thisName == "any")
                     {
                         GenerateCharacterSheet(value);
                         resultText.text = "Loaded!";
@@ -141,12 +144,35 @@ namespace GIB.VRPG2
             resultText.text = "Character not found!";
         }
 
+        public void TrySetName()
+        {
+            string newName = "";
+            string newTitle = "";
+            string newDesc = "";
+            if(CurrentCharacter.TryGetValue("Char_Name", out DataToken nvalue))
+            {
+                newName = nvalue.String;
+            }
+            if (CurrentCharacter.TryGetValue("Title", out DataToken tvalue))
+            {
+                newTitle = tvalue.String;
+            }
+            if (CurrentCharacter.TryGetValue("Description", out DataToken dvalue))
+            {
+                newDesc = dvalue.String;
+            }
+
+            VRPG.SetNameAndTitle(newName, newTitle);
+            VRPG.SetDescription(newDesc);
+
+        }
+
         [Button("CharSheet")]
         public void GenerateCharacterSheet(DataToken value)
         {
             CurrentCharacter = value.DataDictionary;
             resultText.text = "Loaded!";
-            //charSheet.ConvertCharacterSheet(CurrentCharacter);
+            charSheet.ConvertCharacterSheet(CurrentCharacter);
         }
 
 

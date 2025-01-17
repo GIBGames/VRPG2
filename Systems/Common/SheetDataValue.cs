@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using VRC.SDK3.StringLoading;
 using VRC.Udon.Common.Interfaces;
 using VRC.SDK3.Data;
+using TMPro;
 
 namespace GIB.VRPG2
 {
@@ -15,7 +16,7 @@ namespace GIB.VRPG2
     {
         [HideInInspector] public VRPGCharacter CharacterData;
         public string TargetKey;
-        private Text targetText;
+        private TextMeshProUGUI targetText;
 
         [Header("Options")]
         [SerializeField] private bool isSubhash;
@@ -24,13 +25,13 @@ namespace GIB.VRPG2
 
         public void ClearValue()
         {
-            if (targetText == null) targetText = GetComponent<Text>();
+            if (targetText == null) targetText = GetComponent<TextMeshProUGUI>();
             targetText.text = "";
         }
 
         public void AssignValue()
         {
-            if (targetText == null) targetText = GetComponent<Text>();
+            if (targetText == null) targetText = GetComponent<TextMeshProUGUI>();
 
             if (isSubhash)
             {
@@ -57,6 +58,8 @@ namespace GIB.VRPG2
 
         private string GetDots(string targetString, char dot)
         {
+            Debug.Log($"Attempting to serialize {targetString} into dots {dot}.");
+
             if (int.TryParse(targetString, out int value))
             {
                 if (value < 1)
@@ -88,7 +91,7 @@ namespace GIB.VRPG2
         {
             if (CharacterData == null)
             {
-                CharacterData = GameObject.Find("VRPG Character Data").GetComponent<VRPGCharacter>();
+                CharacterData = GameObject.Find("VRPG Character").GetComponent<VRPGCharacter>();
             }
             return CharacterData.CurrentCharacter;
         }

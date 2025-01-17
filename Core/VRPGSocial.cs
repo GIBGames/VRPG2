@@ -20,7 +20,6 @@ namespace GIB.VRPG2
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class VRPGSocial : VRPGComponent
 	{
-		public VRPGPlayerObject SelectedPlayer;
 
 		public VRCPlayerApi[] allPlayers;
 
@@ -38,6 +37,7 @@ namespace GIB.VRPG2
 
 		private VRPGPlayerButton[] playerButtons;
 
+		public VRPGPlayerObject SelectedPlayer;
 
 		//  Properties ===========
 
@@ -55,19 +55,27 @@ namespace GIB.VRPG2
 		#region Public Methods
 		public void SetSelectedPlayer(VRPGPlayerObject targetPlayer)
 		{
-			if (!Utilities.IsValid(targetPlayer.Owner)) return;
+			//if (!Utilities.IsValid(targetPlayer.Owner)) return;
 
-			PlayerData.TryGetString(targetPlayer.Owner,"vrpg-charName",out string tempName);
-            PlayerData.TryGetString(targetPlayer.Owner, "vrpg-charTitle", out string tempTitle);
-            PlayerData.TryGetString(targetPlayer.Owner, "vrpg-charDesc", out string tempDesc);
-
-			playerLabel.SetText(targetPlayer.Owner.displayName);
-			nameLabel.SetText(tempName);
-			titleLabel.SetText(tempTitle);
-			descLabel.SetText(tempDesc);
+			SelectedPlayer = targetPlayer;
+			SetSelectedPlayerApi(targetPlayer.Owner);
 		}
 
-		public void ClearSelectedPlayer()
+        public void SetSelectedPlayerApi(VRCPlayerApi targetApi)
+        {
+            if (!Utilities.IsValid(targetApi)) return;
+
+            PlayerData.TryGetString(targetApi, "vrpg-charName", out string tempName);
+            PlayerData.TryGetString(targetApi, "vrpg-charTitle", out string tempTitle);
+            PlayerData.TryGetString(targetApi, "vrpg-charDesc", out string tempDesc);
+
+            playerLabel.SetText(targetApi.displayName);
+            nameLabel.SetText(tempName);
+            titleLabel.SetText(tempTitle);
+            descLabel.SetText(tempDesc);
+        }
+
+        public void ClearSelectedPlayer()
 		{
 			playerLabel.Clear();
 			nameLabel.Clear();

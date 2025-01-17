@@ -67,24 +67,19 @@ namespace GIB.VRPG2
 
         public void SelectPlayer()
         {
-            if (targetPlayer == null || !Utilities.IsValid(targetPlayer.Owner)) return;
-
+            //if (targetPlayer == null || !Utilities.IsValid(targetPlayer.Owner)) return;
+            Debug.Log("Setting Selected player to: " + targetPlayer.Owner.displayName);
             VRPG.LocalPlayerObject.SetSelected(targetPlayer.Owner);
             VRPG.Social.SetSelectedPlayer(targetPlayer);
         }
 
-        public string GenerateButtonContent(string playerName, string characterName, bool isST = false)
+        public string GenerateButtonContent(string playerName, string thisCharacterName, bool isST = false)
         {
+            string characterName = "" + thisCharacterName;
             // Set initial player label based on ST/narrator status
             string playerLabel;
-            VRPGGameMasterData gmData = VRPG.GMData;
 
-            if (playerName.ToLower() == gmData.GameMasterName.ToLower())
-                playerLabel = $"<b>{playerName}</b> [<color=\"red\">{gmData.GameMasterAbv}</color>]";
-            else if (isST)
-                playerLabel = $"<b>{playerName}</b> [<color=\"orange\">{gmData.GameStaffAbv}</color>]";
-            else
-                playerLabel = $"<b>{playerName}</b>";
+            playerLabel = $"{VRPG.GMData.GetGMIcon(playerName)}{playerName}";
 
             // If player has no name set, ignore subtitle and just return player name
             if (characterName == "" || characterName == " ")
@@ -94,7 +89,7 @@ namespace GIB.VRPG2
             string playerSubtitle = "\n";
 
             //if subtitle starts with a < it represents a state of some kind, ignore "Playing:"
-            if (characterName[0] == '<')
+            if (characterName.Length > 0 && characterName[0] == '<')
                 playerSubtitle += characterName;
             else
                 playerSubtitle += $"Playing: {characterName}";

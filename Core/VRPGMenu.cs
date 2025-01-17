@@ -21,8 +21,8 @@ namespace GIB.VRPG2
     public class VRPGMenu : VRPGComponent
     {
         [Header("References")]
-        [SerializeField] private InputField nameField;
-        [SerializeField] private InputField titleField;
+        [SerializeField] private TMP_InputField nameField;
+        [SerializeField] private TMP_InputField titleField;
 
         [Header("Panels")]
         [SerializeField] private GameObject[] panels;
@@ -123,6 +123,36 @@ namespace GIB.VRPG2
             }
 
             panels[index].SetActive(true);
+        }
+
+        public void SetNameAndTitle()
+        {
+            if (Utilities.IsValid(VRPG.LocalPlayerObject))
+            {
+                VRPG.LocalPlayerObject.SetNameAndTitle(nameField.text, titleField.text);
+                SetPlates(nameField.text, titleField.text);
+            }
+        }
+
+        public void SetOOC()
+        {
+            string oocColorHex = Utils.GetColorHex(VRPG.OocLabelColor);
+            if (Utilities.IsValid(VRPG.LocalPlayerObject))
+                VRPG.LocalPlayerObject.SetNameAndTitle($"<color=#{oocColorHex}>Out of Character</color>", Networking.LocalPlayer.displayName);
+        }
+
+        public void SetHidden()
+        {
+            if (Utilities.IsValid(VRPG.LocalPlayerObject))
+                VRPG.LocalPlayerObject.SetNameAndTitle("", "");
+        }
+
+        public void SetPlates(string newPlateName, string newPlateTitle)
+        {
+            characterNamePlate.text = newPlateName;
+            characterTitlePlate.text = newPlateTitle;
+            playerNamePlate.text = Networking.LocalPlayer.displayName;
+            playerTitlePlate.text = VRPG.GMData.GetGMTitle(Networking.LocalPlayer.displayName);
         }
 
         #endregion
