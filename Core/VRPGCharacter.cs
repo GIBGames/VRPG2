@@ -133,14 +133,13 @@ namespace GIB.VRPG2
                         return;
                     }
                     else
+                    {
                         VRPG.HandlerLog($"charVals was {thisName}, local player name was {localPlayerName}.");
-                    resultText.text = "No Permission!";
-                    return;
+                        resultText.text = "No Permission!";
+                        return;
+                    }
                 }
-
-
             }
-
             resultText.text = "Character not found!";
         }
 
